@@ -64,11 +64,14 @@ an in-process Fondo Client library.
 
 TODO
 
-### Initialize a Fondo network
+### Start a Fondo node
 
-TODO
+For now, start a Fondo node with `lein ring server`. The zone-id is currently
+set by `fondo.core/zone-id`. In the future, we don't want to use a var bound in
+the source code; instead, this should be a parameter to a function that starts a
+node.
 
-### TODO
+### Add a Fondo Value
 
 TODO
 
