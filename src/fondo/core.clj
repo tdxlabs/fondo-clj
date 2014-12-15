@@ -8,7 +8,6 @@
    [ring.middleware.params :refer [wrap-params]]
    [ring.util.response :refer [response]]))
 
-
 ;; FUTURE:
 ;; * use DynamoDB
 ;; * add authentication
