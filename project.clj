@@ -12,12 +12,16 @@
                   :exclusions [commons-codec]]
                  [ring/ring-jetty-adapter "1.3.1"]
                  [ring/ring-json "0.3.1"]
-                 [cheshire "5.4.0"]]
+                 [cheshire "5.4.0"]
+                 [com.taoensso/faraday "1.5.0" :exclusions [org.clojure/clojure]]
+;                 [clj-aws-auth "0.1.0"]
+                 ]
   :plugins [[lein-ring "0.8.11"
              :exclusions [org.clojure/clojure
                           org.clojure/data.xml]]]
   :ring {:handler fondo.node/node-app}
   :profiles
   {:dev
-   {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
+   {:dependencies [[org.clojure/tools.namespace "0.2.7"]
+                   [cider/cider-nrepl "0.8.2-SNAPSHOT"]]
     :source-paths ["dev"]}})
