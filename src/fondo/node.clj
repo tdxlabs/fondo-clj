@@ -28,10 +28,13 @@
 (defn get-value
   [request]
   (let [id (Integer/parseInt (get-in request [:params :id]))
-        val (db/get-value id)]
-    {:status 200
-     :headers {}
-     :body val}))
+        result (db/get-value id)]
+    (if-let [val (:value result)]
+      {:status 200
+       :headers {}
+       :body val}
+      {:status 404
+       :body result})))
 
 (defn put-value
   [request]
