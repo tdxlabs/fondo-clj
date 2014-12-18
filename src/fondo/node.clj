@@ -15,7 +15,9 @@
   [request]
   {:status 200
    :headers {}
-   :body {:API ["GET /info"]}})
+   :body {:API ["GET /info"
+                "GET /value/:id"
+                "PUT /value/:id"]}})
 
 (defn get-info
   [request]
