@@ -17,6 +17,8 @@
                     [:vid :n]
                     {}))
 
+;; TODO: Validate `val`
+;; TODO: Ensure no current value with `id` is stored
 (defn put-value
   [id val]
   (far/put-item dynamodb
