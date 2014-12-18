@@ -25,9 +25,6 @@
           :server ["fondo-clj" "0.1.0"]
           :zone-id zone-id}})
 
-;; S3?
-;; DynamoDB?
-;; Fake with an atom to start
 (defn get-value
   [request]
   (let [id (Integer/parseInt (get-in request [:params :id]))
