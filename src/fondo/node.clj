@@ -30,7 +30,7 @@
 ;; Fake with an atom to start
 (defn get-value
   [request]
-  (let [id (get-in request [:params :id])
+  (let [id (Integer/parseInt (get-in request [:params :id]))
         val (db/get-value id)]
     {:status 200
      :headers {}
@@ -38,7 +38,7 @@
 
 (defn put-value
   [request]
-  (let [id (get-in request [:params :id])
+  (let [id (Integer/parseInt (get-in request [:params :id]))
         value (:body request)]
     (db/put-value id value)
     {:status 200

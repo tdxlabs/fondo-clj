@@ -4,15 +4,28 @@
 
 (def values (atom {}))
 
-(def dynamodb
+(defonce dynamodb
   {:access-key "<AWS_DYNAMODB_ACCESS_KEY>"
    :secret-key "<AWS_DYNAMODB_SECRET_KEY>"
    :endpoint "http://localhost:8000"})
 
+(defn initialize-table
+  "Set up Dynamo table to store Fondo values"
+  []
+  (far/create-table dynamodb
+                    :values
+                    [:vid :n]
+                    {}))
+
 (defn put-value
   [id val]
-  (swap! values assoc id val))
+  (far/put-item dynamodb
+                :values
+                {:vid id
+                 :value (far/freeze val)}))
 
 (defn get-value
   [id]
-  (@values id))
+  (if-let [val (:value (far/get-item dynamodb :values {:vid id}))]
+    {:id id :value val}
+    {:error :not-found}))
