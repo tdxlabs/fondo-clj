@@ -21,12 +21,6 @@
   {:name [v/string v/required]
    :uri [v/string v/required]})
 
-(defn blarg
-  [x]
-  (let [y 2]
-    (if (seq x)
-      y)))
-
 ;; TODO: Ensure no current value with `id` is stored
 (defn put-value
   [id val]
