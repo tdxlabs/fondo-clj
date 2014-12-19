@@ -14,7 +14,8 @@
                  [ring/ring-json "0.3.1"]
                  [cheshire "5.4.0"]
                  [com.taoensso/faraday "1.5.0" :exclusions [org.clojure/clojure]]
-;                 [clj-aws-auth "0.1.0"]
+                 [validata "0.1.8"]
+                                        ;                 [clj-aws-auth "0.1.0"]
                  ]
   :plugins [[lein-ring "0.8.11"
              :exclusions [org.clojure/clojure

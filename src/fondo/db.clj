@@ -1,6 +1,7 @@
 (ns fondo.db
   (:require
-   [taoensso.faraday :as far]))
+   [taoensso.faraday :as far]
+   [validata.core :as v]))
 
 (defonce dynamodb
   {:access-key "<AWS_DYNAMODB_ACCESS_KEY>"
@@ -15,14 +16,29 @@
                     [:vid :n]
                     {}))
 
-;; TODO: Validate `val`
+
+(def value-validations
+  {:name [v/string v/required]
+   :uri [v/string v/required]})
+
+(defn blarg
+  [x]
+  (let [y 2]
+    (if (seq x)
+      y)))
+
 ;; TODO: Ensure no current value with `id` is stored
 (defn put-value
   [id val]
-  (far/put-item dynamodb
-                :values
-                {:vid id
-                 :value (far/freeze val)}))
+  (let [e (v/errors val value-validations)]
+    (if (empty? e)
+      (do
+        (far/put-item dynamodb
+                      :values
+                      {:vid id
+                       :value (far/freeze val)})
+        {:stored true :vid id})
+      {:errors e})))
 
 (defn get-value
   [id]

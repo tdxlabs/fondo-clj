@@ -1,6 +1,7 @@
 (ns fondo.node
   (:require
    [cheshire.core :as json]
+   [clojure.walk :refer [keywordize-keys]]
    [compojure.core :refer [routes GET PUT POST]]
    [compojure.route :as route]
    [fondo.db :as db]
@@ -41,10 +42,13 @@
 (defn put-value
   [request]
   (let [id (Integer/parseInt (get-in request [:params :id]))
-        value (:body request)]
-    (db/put-value id value)
-    {:status 200
-     :body {:stored true}}))
+        value (keywordize-keys (:body request))
+        result (db/put-value id value)]
+    (if-let [errors (:errors result)]
+      {:status 422
+       :body errors}
+      {:status 200
+       :body result})))
 
 (def node-routes
   (routes
