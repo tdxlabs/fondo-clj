@@ -8,6 +8,10 @@ tar xvf dynamodb_local_latest.tar.gz
 java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar
 ```
 
+See also [DynamoDB local mode][1]
+
+[1]: https://aws.amazon.com/blogs/aws/dynamodb-local-for-desktop-development/
+
 # Setting up DynamoDB on AWS
 
 Fondo will use `clj-aws-auth` to connect to your AWS Dynamo instance, which checks the following __sources__ in order:
