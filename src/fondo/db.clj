@@ -2,8 +2,6 @@
   (:require
    [taoensso.faraday :as far]))
 
-(def values (atom {}))
-
 (defonce dynamodb
   {:access-key "<AWS_DYNAMODB_ACCESS_KEY>"
    :secret-key "<AWS_DYNAMODB_SECRET_KEY>"
