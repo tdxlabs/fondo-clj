@@ -22,6 +22,5 @@
   :ring {:handler fondo.node/node-app}
   :profiles
   {:dev
-   {:dependencies [[org.clojure/tools.namespace "0.2.7"]
-                   [cider/cider-nrepl "0.8.2-SNAPSHOT"]]
+   {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
     :source-paths ["dev"]}})
