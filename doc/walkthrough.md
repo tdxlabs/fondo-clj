@@ -6,11 +6,13 @@
 
 Note that `zone-id` is hard-coded in `fondo.node`.
 
- Start a local DynamoDB
+Start a local DynamoDB.
 
-`lein repl` then `(fondo.db/initialize-table)`.
+`lein init-db`
 
-mmm-Currently, `zone-id` is hard-coded.
+### Initializing a zone
+
+Currently, `zone-id` is hard-coded.
 
 Start multiple nodes like this:
 * `lein ring server 3000`

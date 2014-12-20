@@ -24,4 +24,6 @@
   :profiles
   {:dev
    {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
-    :source-paths ["dev"]}})
+    :source-paths ["dev"]}}
+  :aliases {"init-db"
+            ["run" "-m" "fondo.db/initialize-table"]})
