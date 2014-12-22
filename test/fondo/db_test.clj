@@ -26,22 +26,25 @@
 (deftest validate-value
   (testing "correctly validates values"
     (let [valid1 {:name "Name"
-                  :uri  "URI"}
+                  :uri  "http://example.com/data"}
           valid2 {:name "Name"
-                  :uri  "URI"
+                  :uri  "http://example.com/data"
                   :description "Description"}
           invalid1 {:uri "URI"}
-          invalid2 {:name "Name"}]
+          invalid2 {:name "Name"}
+          invalid3 {:uri "URI"
+                    :name "Name"}]
       (is (v/valid? valid1 db/value-validations))
       (is (v/valid? valid2 db/value-validations))
       (is (not (v/valid? invalid1 db/value-validations)))
-      (is (not (v/valid? invalid2 db/value-validations))))))
+      (is (not (v/valid? invalid2 db/value-validations)))
+      (is (not (v/valid? invalid3 db/value-validations))))))
 
 (deftest put-and-get-values
   (testing "stores and retrieves values"
     (let [id 12345
           val {:name "Test"
-               :uri "URI"}]
+               :uri "http://example.com/data"}]
       (db/put-value id val :test-values)
       (let [result (get-value id)
             missing (get-value 67890)]
@@ -53,7 +56,7 @@
   (testing "does not overwrite preexisting IDs"
     (let [id 98765
           val {:name "Test"
-               :uri "URI"}]
+               :uri "http://example.com/data"}]
       (put-value id val)
       (let [failed (put-value id val)]
         (is (= ["Value with that ID exists"] (:errors failed)))))))

@@ -14,6 +14,7 @@
                  [ring/ring-json "0.3.1"]
                  [cheshire "5.4.0"]
                  [com.taoensso/faraday "1.5.0" :exclusions [org.clojure/clojure]]
+                 [clojurewerkz/urly "2.0.0-alpha5"]
                  [validata "0.1.8"]
                                         ;                 [clj-aws-auth "0.1.0"]
                  ]

@@ -1,6 +1,7 @@
 (ns fondo.db
   (:require
    [taoensso.faraday :as far]
+   [clojurewerkz.urly.core :refer [url-like absolute?]]
    [validata.core :as v]))
 
 (defonce dynamodb
@@ -18,9 +19,19 @@
                     [:vid :n]
                     {}))
 
+(defn ^:internal uri?
+  [k v & [_]]
+  (if (nil? k) true
+      (and (url-like v)
+           (absolute? v))))
+
+(def ^:internal uri
+  {:validator uri?
+   :error "value must be a valid URI"})
+
 (def value-validations
   {:name [v/string v/required]
-   :uri [v/string v/required]})
+   :uri [v/string v/required uri]})
 
 (defn get-value
   [id & [table-name]]
