@@ -11,6 +11,16 @@
   (f)
   (far/delete-table db/dynamodb :test-values))
 
+(defn put-value
+  "Put value, using test values table"
+  [id val]
+  (db/put-value id val :test-values))
+
+(defn get-value
+  "Get value, using test values table"
+  [id]
+  (db/get-value id :test-values))
+
 (use-fixtures :once table-setup)
 
 (deftest validate-value
@@ -33,8 +43,17 @@
           val {:name "Test"
                :uri "URI"}]
       (db/put-value id val :test-values)
-      (let [result (db/get-value id :test-values)
-            missing (db/get-value 67890 :test-values)]
+      (let [result (get-value id)
+            missing (get-value 67890)]
         (is (= id (:id result)))
         (is (= val (:value result)))
         (is (= {:error :not-found} missing))))))
+
+(deftest ensure-unique-id
+  (testing "does not overwrite preexisting IDs"
+    (let [id 98765
+          val {:name "Test"
+               :uri "URI"}]
+      (put-value id val)
+      (let [failed (put-value id val)]
+        (is (= ["Value with that ID exists"] (:errors failed)))))))

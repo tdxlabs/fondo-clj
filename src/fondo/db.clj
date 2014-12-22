@@ -22,19 +22,6 @@
   {:name [v/string v/required]
    :uri [v/string v/required]})
 
-;; TODO: Ensure no current value with `id` is stored
-(defn put-value
-  [id val & [table-name]]
-  (let [e (v/errors val value-validations)]
-    (if (empty? e)
-      (do
-        (far/put-item dynamodb
-                      (or table-name default-table-name)
-                      {:vid id
-                       :value (far/freeze val)})
-        {:stored true :vid id})
-      {:errors e})))
-
 (defn get-value
   [id & [table-name]]
   (if-let [val (:value (far/get-item dynamodb
@@ -42,3 +29,19 @@
                                      {:vid id}))]
     {:id id :value val}
     {:error :not-found}))
+
+(defn put-value
+  [id val & [table-name]]
+  (let [e (v/errors val value-validations)
+        t (or table-name default-table-name)]
+    (if (empty? e)
+      (if (= :not-found (:error (get-value id t)))
+        (do
+          (far/put-item dynamodb
+                        t
+                        {:vid id
+                         :value (far/freeze val)})
+          {:stored true :vid id})
+        {:errors ["Value with that ID exists"]})
+      {:errors e})))
+
