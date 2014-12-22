@@ -30,7 +30,7 @@
           valid2 {:name "Name"
                   :uri  "http://example.com/data"
                   :description "Description"}
-          invalid1 {:uri "URI"}
+          invalid1 {:uri "http://example.com/data"}
           invalid2 {:name "Name"}
           invalid3 {:uri "URI"
                     :name "Name"}]
