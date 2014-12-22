@@ -34,6 +34,7 @@
    :uri [v/string v/required uri]})
 
 (defn get-value
+  "Get a value specified by id from the database."
   [id & [table-name]]
   (if-let [val (:value (far/get-item dynamodb
                                      (or table-name default-table-name)
@@ -42,6 +43,10 @@
     {:error :not-found}))
 
 (defn put-value
+  "Put val in the database with ID id.
+   Validates existence of :name and :uri in val, and :uri
+   must be a valid URI. No value with id may exist in the
+   database already."
   [id val & [table-name]]
   (let [e (v/errors val value-validations)
         t (or table-name default-table-name)]
