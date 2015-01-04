@@ -1,9 +1,8 @@
 (ns fondo.db-test
   (:require
-      [bencode.core :refer [bencode]]
       [clojure.test :refer :all]
       [fondo.db :as db]
-      [pandect.core :refer [sha3-384]]
+      [fondo.encode :refer [encode-and-hash]]
       [taoensso.faraday :as far]
       [validata.core :as v]))
 
@@ -47,7 +46,7 @@
   (testing "stores and retrieves values"
     (let [val {:name "Test"
                :uri "http://example.com/data"}
-          id (db/bencode-and-hash val)]
+          id (encode-and-hash val)]
       (db/put-value id val :test-values)
       (let [result (get-value id)
             missing (get-value "67890")]
@@ -59,7 +58,7 @@
   (testing "does not overwrite preexisting IDs"
     (let [val {:name "Test"
                :uri "http://example.com/data"}
-          id (db/bencode-and-hash val)]
+          id (encode-and-hash val)]
       (put-value id val)
       (let [failed (put-value id val)]
         (is (= ["Value with that ID exists"] (get-in failed [:errors :vid])))))))

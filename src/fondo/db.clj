@@ -1,8 +1,7 @@
 (ns fondo.db
   (:require
-   [bencode.core :refer [bencode]]
    [clojurewerkz.urly.core :refer [url-like absolute?]]
-   [pandect.core :refer [sha3-384]]
+   [fondo.encode :refer [encode-and-hash]]
    [taoensso.faraday :as far]
    [validata.core :as v]))
 
@@ -44,10 +43,6 @@
     {:id id :value val}
     {:error :not-found}))
 
-(defn ^:internal bencode-and-hash
-  [val]
-  (sha3-384 (bencode val)))
-
 (defn put-value
   "Put val in the database with ID id.
    Validates existence of :name and :uri in val, and :uri
@@ -59,7 +54,7 @@
         t (or table-name default-table-name)]
     (if (empty? e)
       (if (= :not-found (:error (get-value id t)))
-        (if (= id (bencode-and-hash val))
+        (if (= id (encode-and-hash val))
           (do
             (far/put-item dynamodb
                           t
