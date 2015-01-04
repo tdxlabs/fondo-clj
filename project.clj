@@ -16,6 +16,7 @@
                  [com.taoensso/faraday "1.5.0" :exclusions [org.clojure/clojure]]
                  [clojurewerkz/urly "2.0.0-alpha5"]
                  [validata "0.1.8"]
+                 [clj-http "1.0.1"]
                                         ;                 [clj-aws-auth "0.1.0"]
                  ]
   :plugins [[lein-ring "0.8.11"
