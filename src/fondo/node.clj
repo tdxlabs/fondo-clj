@@ -46,7 +46,7 @@
         result (db/put-value id value)]
     (if-let [errors (:errors result)]
       {:status 422
-       :body errors}
+       :body {:errors errors}}
       {:status 200
        :body result})))
 
