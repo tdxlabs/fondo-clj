@@ -30,7 +30,7 @@
 
 (defn get-value
   [request]
-  (let [id (Integer/parseInt (get-in request [:params :id]))
+  (let [id (get-in request [:params :id])
         result (db/get-value id)]
     (if-let [val (:value result)]
       {:status 200
@@ -41,7 +41,7 @@
 
 (defn put-value
   [request]
-  (let [id (Integer/parseInt (get-in request [:params :id]))
+  (let [id (get-in request [:params :id])
         value (keywordize-keys (:body request))
         result (db/put-value id value)]
     (if-let [errors (:errors result)]

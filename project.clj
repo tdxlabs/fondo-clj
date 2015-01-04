@@ -17,6 +17,8 @@
                  [clojurewerkz/urly "2.0.0-alpha5"]
                  [validata "0.1.8"]
                  [clj-http "1.0.1"]
+                 [bencode "0.2.5"]
+                 [pandect "0.4.1"]
                                         ;                 [clj-aws-auth "0.1.0"]
                  ]
   :plugins [[lein-ring "0.8.11"

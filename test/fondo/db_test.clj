@@ -1,8 +1,11 @@
 (ns fondo.db-test
-  (:require [clojure.test :refer :all]
-            [fondo.db :as db]
-            [taoensso.faraday :as far]
-            [validata.core :as v]))
+  (:require
+      [bencode.core :refer [bencode]]
+      [clojure.test :refer :all]
+      [fondo.db :as db]
+      [pandect.core :refer [sha3-384]]
+      [taoensso.faraday :as far]
+      [validata.core :as v]))
 
 (defn table-setup
   "Create table, then destroy on completion"
@@ -42,21 +45,21 @@
 
 (deftest put-and-get-values
   (testing "stores and retrieves values"
-    (let [id 12345
-          val {:name "Test"
-               :uri "http://example.com/data"}]
+    (let [val {:name "Test"
+               :uri "http://example.com/data"}
+          id (db/bencode-and-hash val)]
       (db/put-value id val :test-values)
       (let [result (get-value id)
-            missing (get-value 67890)]
+            missing (get-value "67890")]
         (is (= id (:id result)))
         (is (= val (:value result)))
         (is (= {:error :not-found} missing))))))
 
 (deftest ensure-unique-id
   (testing "does not overwrite preexisting IDs"
-    (let [id 98765
-          val {:name "Test"
-               :uri "http://example.com/data"}]
+    (let [val {:name "Test"
+               :uri "http://example.com/data"}
+          id (db/bencode-and-hash val)]
       (put-value id val)
       (let [failed (put-value id val)]
-        (is (= ["Value with that ID exists"] (:errors failed)))))))
+        (is (= ["Value with that ID exists"] (get-in failed [:errors :vid])))))))
