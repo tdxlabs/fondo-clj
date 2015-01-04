@@ -17,7 +17,8 @@
     resp))
 
 (defn put-value
-  "Put a value into node; hashes val to return the ID that will be used."
+  "Put a value into node; hashes val to return the ID that will be used.
+   If unsuccessful, errors are returned in a map."
   [node val]
   (let [id   (encode-and-hash val)
         url  (url/url-like (:url node))
