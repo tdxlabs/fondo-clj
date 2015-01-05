@@ -10,8 +10,6 @@
    [ring.middleware.params :refer [wrap-params]]
    [ring.util.response :refer [response]]))
 
-(def zone-id "12345")
-
 (defn get-root
   [request]
   {:status 200
@@ -21,7 +19,7 @@
                 "PUT /value/:id"]}})
 
 (defn get-info
-  [request]
+  [zone-id]
   {:status 200
    :headers {}
    :body {:fondo-version "0.1.0"
@@ -29,9 +27,8 @@
           :zone-id zone-id}})
 
 (defn get-value
-  [request]
-  (let [id (get-in request [:params :id])
-        result (db/get-value id)]
+  [db table-name id]
+  (let [result (db/get-value db table-name id)]
     (if-let [val (:value result)]
       {:status 200
        :headers {}
@@ -40,24 +37,26 @@
        :body result})))
 
 (defn put-value
-  [request]
+  [db table-name id request]
   (let [id (get-in request [:params :id])
         value (keywordize-keys (:body request))
-        result (db/put-value id value)]
+        result (db/put-value db table-name id value)]
     (if-let [errors (:errors result)]
       {:status 422
        :body {:errors errors}}
       {:status 200
        :body result})))
 
-(def node-routes
+(defn node-routes
+  [db table-name zone-id]
   (routes
    (GET "/" [] get-root)
-   (GET "/info" [] get-info)
-   (GET "/value/:id" [] get-value)
-   (PUT "/value/:id" [] put-value)))
+   (GET "/info" [] (get-info zone-id))
+   (GET "/value/:id" [id] (get-value db table-name id))
+   (PUT "/value/:id" [id :as request] (put-value db table-name id request))))
 
-(def node-app
-  (-> node-routes
+(defn node-app
+  [db table-name zone-id]
+  (-> (node-routes db table-name zone-id)
       wrap-json-response
       wrap-json-body))

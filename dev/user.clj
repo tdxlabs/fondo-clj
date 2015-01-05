@@ -11,32 +11,41 @@
    [clojure.string :as str]
    [clojure.test :as test]
    [clojure.tools.namespace.repl :refer [refresh refresh-all]]
-   [fondo.core :refer :all]))
+   [fondo.client :as client]
+   [fondo.db :as db]
+   [fondo.node :as node]
+   [ring.server.standalone :refer :all]))
 
 (def system
   "A Var containing an object representing the application under
   development."
-  nil)
+  {:db           {:access-key "<AWS_DYNAMODB_ACCESS_KEY>"
+                  :secret-key "<AWS_DYNAMODB_SECRET_KEY>"
+                  :endpoint "http://localhost:8000"}
+   :table-name   :values
+   :zone-id      "12345"})
 
 (defn init
   "Creates and initializes the system under development in the Var
   #'system."
   []
-  ;; TODO
-  )
+  (db/ensure-table (:db system)
+                   (:table-name system)))
 
 (defn start
   "Starts the system running, updates the Var #'system."
   []
-  ;; TODO
-  )
+  (let [server (serve (node/node-app (:db system)
+                                     (:table-name system)
+                                     (:zone-id system)))]
+    (alter-var-root #'system assoc :server server)))
 
 (defn stop
   "Stops the system if it is currently running, updates the Var
   #'system."
   []
-  ;; TODO
-  )
+  (.stop (:server system))
+  (alter-var-root #'system dissoc :server))
 
 (defn go
   "Initializes and starts the system running."

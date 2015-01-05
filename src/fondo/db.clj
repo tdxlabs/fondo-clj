@@ -5,20 +5,21 @@
    [taoensso.faraday :as far]
    [validata.core :as v]))
 
-(defonce dynamodb
-  {:access-key "<AWS_DYNAMODB_ACCESS_KEY>"
-   :secret-key "<AWS_DYNAMODB_SECRET_KEY>"
-   :endpoint "http://localhost:8000"})
-
-(def default-table-name :values)
-
 (defn initialize-table
   "Set up Dynamo table to store Fondo values"
-  [& [table-name]]
-  (far/create-table dynamodb
-                    (or table-name default-table-name)
+  [db table-name]
+  (far/create-table db
+                    table-name
                     [:vid :s]
                     {}))
+
+(defn ensure-table
+  "Checks to see if the given table has been initialized,
+   and if not, initializes it."
+  [db table-name]
+  (if-not (some #{table-name} (far/list-tables db))
+    (initialize-table db table-name)
+    true))
 
 (defn ^:internal uri?
   [k v & [_]]
@@ -36,9 +37,9 @@
 
 (defn get-value
   "Get a value specified by id from the database."
-  [id & [table-name]]
-  (if-let [val (:value (far/get-item dynamodb
-                                     (or table-name default-table-name)
+  [db table-name id]
+  (if-let [val (:value (far/get-item db
+                                     table-name
                                      {:vid id}))]
     {:id id :value val}
     {:error :not-found}))
@@ -49,16 +50,15 @@
    must be a valid URI. The data at :uri will be downloaded
    and added to val as :data, and id must match the bencoded
    and SHA3-384 hashed result."
-  [id val & [table-name]]
-  (let [e (v/errors val value-validations)
-        t (or table-name default-table-name)]
+  [db table-name id val]
+  (let [e (v/errors val value-validations)]
     (if (empty? e)
-      (if (= :not-found (:error (get-value id t)))
+      (if (= :not-found (:error (get-value db table-name id)))
         (let [with-data (val-with-data val)]
           (if (= id (encode-and-hash with-data))
             (do
-              (far/put-item dynamodb
-                            t
+              (far/put-item db
+                            table-name
                             {:vid id
                              :value (far/freeze val)})
               {:stored true :vid id})

@@ -27,7 +27,8 @@
   :ring {:handler fondo.node/node-app}
   :profiles
   {:dev
-   {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
+   {:dependencies [[org.clojure/tools.namespace "0.2.7"]
+                   [ring-server "0.3.1"]]
     :source-paths ["dev"]}}
   :aliases {"init-db"
             ["run" "-m" "fondo.db/initialize-table"]})
