@@ -23,7 +23,8 @@
                   :secret-key "<AWS_DYNAMODB_SECRET_KEY>"
                   :endpoint "http://localhost:8000"}
    :table-name   :values
-   :zone-id      "12345"})
+   :zone-id      "12345"
+   :port         3000})
 
 (defn init
   "Creates and initializes the system under development in the Var
@@ -37,8 +38,11 @@
   []
   (let [server (serve (node/node-app (:db system)
                                      (:table-name system)
-                                     (:zone-id system)))]
-    (alter-var-root #'system assoc :server server)))
+                                     (:zone-id system))
+                      {:port (:port system)})]
+    (alter-var-root #'system assoc :server server
+                                   :node   {:url (str "http://localhost:"
+                                                      (:port system))})))
 
 (defn stop
   "Stops the system if it is currently running, updates the Var
