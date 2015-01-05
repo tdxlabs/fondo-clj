@@ -1,7 +1,7 @@
 (ns fondo.db
   (:require
    [clojurewerkz.urly.core :refer [url-like absolute?]]
-   [fondo.encode :refer [encode-and-hash]]
+   [fondo.encode :refer [encode-and-hash val-with-data]]
    [taoensso.faraday :as far]
    [validata.core :as v]))
 
@@ -46,22 +46,23 @@
 (defn put-value
   "Put val in the database with ID id.
    Validates existence of :name and :uri in val, and :uri
-   must be a valid URI. No value with id may exist in the
-   database already, and id must equal the SHA3-384 hashed
-   result of bencoding val"
+   must be a valid URI. The data at :uri will be downloaded
+   and added to val as :data, and id must match the bencoded
+   and SHA3-384 hashed result."
   [id val & [table-name]]
   (let [e (v/errors val value-validations)
         t (or table-name default-table-name)]
     (if (empty? e)
       (if (= :not-found (:error (get-value id t)))
-        (if (= id (encode-and-hash val))
-          (do
-            (far/put-item dynamodb
-                          t
-                          {:vid id
-                           :value (far/freeze val)})
-            {:stored true :vid id})
-          {:errors {:vid ["Hash does not match ID"]}})
+        (let [with-data (val-with-data val)]
+          (if (= id (encode-and-hash with-data))
+            (do
+              (far/put-item dynamodb
+                            t
+                            {:vid id
+                             :value (far/freeze val)})
+              {:stored true :vid id})
+            {:errors {:vid ["Hash does not match ID"]}}))
         {:errors {:vid ["Value with that ID exists"]}})
       {:errors e})))
 
