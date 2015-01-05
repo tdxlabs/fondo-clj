@@ -52,17 +52,24 @@
    and SHA3-384 hashed result."
   [db table-name id val]
   (let [e (v/errors val value-validations)]
-    (if (empty? e)
-      (if (= :not-found (:error (get-value db table-name id)))
-        (let [with-data (val-with-data val)]
-          (if (= id (encode-and-hash with-data))
-            (do
-              (far/put-item db
-                            table-name
-                            {:vid id
-                             :value (far/freeze val)})
-              {:stored true :vid id})
-            {:errors {:vid ["Hash does not match ID"]}}))
-        {:errors {:vid ["Value with that ID exists"]}})
-      {:errors e})))
+    (cond
+          ;; Failed validation
+          (not (empty? e))
+          {:errors e}
+
+          ;; ID exists
+          (not (= :not-found (:error (get-value db table-name id))))
+          {:errors {:vid ["Value with that ID exists"]}}
+
+          ;; Hash does not match ID
+          (not (= id (encode-and-hash (val-with-data val))))
+          {:errors {:vid ["Hash does not match ID"]}}
+
+          :success
+          (do
+            (far/put-item db
+                          table-name
+                          {:vid id
+                           :value (far/freeze val)})
+            {:stored true :vid id}))))
 
