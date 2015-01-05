@@ -63,3 +63,13 @@
   []
   (stop)
   (refresh :after 'user/go))
+
+;; Convenience functions
+
+(defn get-value
+  [id]
+  (client/get-value (:node system) id))
+
+(defn put-value
+  [val]
+  (client/put-value (:node system) val))
