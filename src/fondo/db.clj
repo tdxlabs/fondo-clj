@@ -19,6 +19,9 @@
     true))
 
 (defn ^:internal uri?
+  "If the key is present, is the value an absolute URL? Note: by design,
+  this returns true for a nil key because this is the pattern used by
+  the validata library."
   [k v & [_]]
   (if (nil? k) true
       (and (url-like v) (absolute? v))))
