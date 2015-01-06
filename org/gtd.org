@@ -17,7 +17,8 @@ Check `put-value` in [[~/dev/tdx/fondo-clj/src/fondo/db.clj]].
 :CATEGORY: someday
 :END:
 * Done
-** TODO: Should fondo.db.uri? return true for a nil URI?
+** DONE Should fondo.db.uri? return true for a nil URI?
+   CLOSED: [2015-01-06 Tue 17:22]
 Yes, because this is the required pattern for validata.
 * Org Resources
 + [[http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html][GTD Workflow by Charles Cave]]
