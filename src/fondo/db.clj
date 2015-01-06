@@ -8,10 +8,7 @@
 (defn initialize-table
   "Set up Dynamo table to store Fondo values"
   [db table-name]
-  (far/create-table db
-                    table-name
-                    [:vid :s]
-                    {}))
+  (far/create-table db table-name [:vid :s] {}))
 
 (defn ensure-table
   "Checks to see if the given table has been initialized,
@@ -24,8 +21,7 @@
 (defn ^:internal uri?
   [k v & [_]]
   (if (nil? k) true
-      (and (url-like v)
-           (absolute? v))))
+      (and (url-like v) (absolute? v))))
 
 (def ^:internal uri
   {:validator uri?
@@ -38,9 +34,7 @@
 (defn get-value
   "Get a value specified by id from the database."
   [db table-name id]
-  (if-let [val (:value (far/get-item db
-                                     table-name
-                                     {:vid id}))]
+  (if-let [val (:value (far/get-item db table-name {:vid id}))]
     {:id id :value val}
     {:error :not-found}))
 
@@ -53,23 +47,19 @@
   [db table-name id val]
   (let [e (v/errors val value-validations)]
     (cond
-          ;; Failed validation
-          (not (empty? e))
-          {:errors e}
+     ;; Failed validation
+     (not (empty? e))
+     {:errors e}
 
-          ;; ID exists
-          (not (= :not-found (:error (get-value db table-name id))))
-          {:errors {:vid ["Value with that ID exists"]}}
+     ;; ID exists
+     (not (= :not-found (:error (get-value db table-name id))))
+     {:errors {:vid ["Value with that ID exists"]}}
 
-          ;; Hash does not match ID
-          (not (= id (encode-and-hash (val-with-data val))))
-          {:errors {:vid ["Hash does not match ID"]}}
+     ;; Hash does not match ID
+     (not (= id (encode-and-hash (val-with-data val))))
+     {:errors {:vid ["Hash does not match ID"]}}
 
-          :success
-          (do
-            (far/put-item db
-                          table-name
-                          {:vid id
-                           :value (far/freeze val)})
-            {:stored true :vid id}))))
-
+     :success
+     (do
+       (far/put-item db table-name {:vid id :value (far/freeze val)})
+       {:stored true :vid id}))))

@@ -34,7 +34,7 @@ Example:
 ```clj
 {:name "Weather Data for Washington, DC, June 2014"
  :uri "http://s3.amazonaws.com/weather/dc/jun2014.csv"
- :description "Temperature and wind data are available." }
+ :description "Temperature and wind data are available."}
 ```
 
 TODO: Allow data to be provided and push through to URI
