@@ -1,0 +1,87 @@
+* Inbox
+:PROPERTIES:
+:CATEGORY: inbox
+:END:
+* Actions
+:PROPERTIES:
+:CATEGORY: action
+:END:
+* Repeating
+:PROPERTIES:
+:CATEGORY: repeating
+:END:
+* Someday/Maybe
+:PROPERTIES:
+:CATEGORY: someday
+:END:
+* Done
+* Org Resources
++ [[http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html][GTD Workflow by Charles Cave]]
++ [[http://orgmode.org/worg/org-gtd-etc.html][Org for GTD and other Task managment systems]]
+* Org Mode Commands
+** Timestamps
+*** `C-c .` : `org-time-stamp`
+Prompt for a date/time and insert a time stamp. If the user specifies a time
+like HH:MM or if this command is called with at least one prefix argument, the
+time stamp contains the date and the time. Otherwise, only the date is be
+included.
+*** `C-c C-d` : `org-deadline`
+Insert the "DEADLINE" string with a timestamp to make a deadline. With one
+universal prefix argument, remove any deadline from the item. With two universal
+prefix arguments, prompt for a warning delay. With argument TIME, set the
+deadline at the corresponding date. TIME can either be an Org date like
+"2011-07-24" or a delta like "+2d".
+*** `C-c C-s` : `org-schedule`
+Insert the "SCHEDULED" string with a timestamp to schedule a TODO item. With one
+universal prefix argument, remove any scheduling date from the item. With two
+universal prefix arguments, prompt for a delay cookie. With argument TIME,
+scheduled at the corresponding date. TIME can either be an Org date like
+"2011-07-24" or a delta like "+2d".
+** Sparse Trees
+*** `C-c /` : `org-sparse-tree`
+This prompts for an extra key to select a sparse-tree creating command.
+*** `C-c / m` :
+Create a sparse tree with all headlines matching a tags search. With a C-u prefix argument, ignore headlines that are not a TODO line.
+** Refiling
+*** `C-c C-w` : `org-refile`
+Refile entry or region to a different location.
+** Narrowing
+*** `C-x n s` : `org-narrow-to-subtree`
+Narrow buffer to current block.
+*** `C-x n b` : `org-narrow-to-block`
+Narrow buffer to current subtree.
+** Sorting
+*** `C-c ^` : `org-sort`
+Sort same-level entries. When there is an active region, all entries in the
+region will be sorted. Otherwise the children of the current headline are
+sorted. The command prompts for the sorting method, which can be alphabetically,
+numerically, by time (first timestamp with active preferred, creation time,
+scheduled time, deadline time), by priority, by TODO keyword (in the sequence
+the key- words have been defined in the setup) or by the value of a
+property. Reverse sorting is possible as well. You can also supply your own
+function to extract the sorting key. With a C-u prefix, sorting will be
+case-sensitive.
+** Tags
+*** `C-c C-q` : `org-set-tags-command`
+Enter new tags for the current headline.  Org mode will either offer completion
+or a special single-key interface for setting tags, see below.  After pressing
+<RET>, the tags will be inserted and aligned to `org-tags-column'.  When called
+with a `C-u' prefix, all tags in the current buffer will be aligned to that
+column, just to make things look nice.  TAGS are automatically realigned after
+promotion, demotion, and TODO state changes (*note TODO basics::).
+*** `C-c C-c` : `org-set-tags-command`
+When the cursor is in a headline, this does the same as `C-c C-q'.
+** Tag Searches
+*** `C-c / m` : `C-c \` : `org-match-sparse-tree`
+Create a sparse tree with all headlines matching a tags/property/TODO
+search. With a C-u prefix argument, ignore headlines that are not a TODO
+line. See Matching tags and properties.
+*** `C-c a m` : `org-tags-view`
+Create a global list of tag matches from all agenda files. See Matching tags and
+properties.
+*** `C-c a M` : `org-tags-view`
+Create a global list of tag matches from all agenda files, but check only TODO
+items and force checking subitems (see the option
+org-tags-match-list-sublevels).
+* Org Config
+#+TODO: TODO WAITING | DONE
