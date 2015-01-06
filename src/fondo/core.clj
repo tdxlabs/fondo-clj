@@ -7,8 +7,3 @@
    [ring.middleware.json :refer [wrap-json-response]]
    [ring.middleware.params :refer [wrap-params]]
    [ring.util.response :refer [response]]))
-
-;; FUTURE:
-;; * use DynamoDB
-;; * add authentication
-
