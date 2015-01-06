@@ -9,6 +9,10 @@ Zone. How can this be controlled?
 
 TODO
 
+## What hashing function do we want and why?
+
+As of 2015-01-06, we're using SHA-384. What is our rationale?
+
 ## TODO
 
 TODO
