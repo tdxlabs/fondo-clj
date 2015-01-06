@@ -6,6 +6,8 @@
 :PROPERTIES:
 :CATEGORY: action
 :END:
+** TODO: What happens if `faraday/put-item` fails?
+Check `put-value` in [[~/dev/tdx/fondo-clj/src/fondo/db.clj]].
 * Repeating
 :PROPERTIES:
 :CATEGORY: repeating
