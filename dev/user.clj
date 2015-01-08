@@ -11,6 +11,7 @@
    [clojure.string :as str]
    [clojure.test :as test]
    [clojure.tools.namespace.repl :refer [refresh refresh-all]]
+   [environ.core :refer [env]]
    [fondo.client :as client]
    [fondo.db :as db]
    [fondo.node :as node]
@@ -19,12 +20,15 @@
 (def system
   "A Var containing an object representing the application under
   development."
-  {:db           {:access-key "<AWS_DYNAMODB_ACCESS_KEY>"
-                  :secret-key "<AWS_DYNAMODB_SECRET_KEY>"
-                  :endpoint "http://localhost:8000"}
-   :table-name   :values
-   :zone-id      "12345"
-   :port         3000})
+  {:db           {:access-key (env :dynamo-access-key)
+                  :secret-key (env :dynamo-secret-key)
+                  :endpoint   (env :dynamo-endpoint)}
+   :table-name   (env :dynamo-table-name)
+   :zone-id      (env :zone-id)
+   :port         (env :node-port)
+   :s3           {:cred {:access-key (env :s3-access-key)
+                         :secret-key (env :s3-secret-key)}
+                  :bucket-name (env :s3-bucket-name)}})
 
 (defn init
   "Creates and initializes the system under development in the Var

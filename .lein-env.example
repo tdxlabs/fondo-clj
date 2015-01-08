@@ -1,0 +1,10 @@
+{:s3-access-key  ""
+ :s3-secret-key  ""
+ :s3-bucket-name ""
+ :dynamo-access-key "<AWS_DYNAMODB_ACCESS_KEY>"
+ :dynamo-secret-key "<AWS_DYNAMODB_SECRET_KEY>"
+ ;; Set to null to use AWS
+ :dynamo-endpoint   "http://localhost:8000"
+ :dynamo-table-name :values
+ :zone-id           "12345"
+ :node-port         3000}

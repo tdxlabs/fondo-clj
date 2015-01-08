@@ -19,6 +19,8 @@
                  [clj-http "1.0.1"]
                  [bencode "0.2.5"]
                  [pandect "0.4.1"]
+                 [clj-aws-s3 "0.3.10" :exclusions [joda-time]]
+                 [environ "1.0.0"]
                                         ;                 [clj-aws-auth "0.1.0"]
                  ]
   :plugins [[lein-ring "0.8.11"
