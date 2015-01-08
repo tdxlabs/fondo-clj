@@ -4,7 +4,9 @@
    [clojure.walk :refer [keywordize-keys]]
    [compojure.core :refer [routes GET PUT POST]]
    [compojure.route :as route]
+   [environ.core :refer [env]]
    [fondo.db :as db]
+   [ring.adapter.jetty :as jetty]
    [ring.middleware.content-type :refer [wrap-content-type]]
    [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
    [ring.middleware.params :refer [wrap-params]]
@@ -60,3 +62,14 @@
   (-> (node-routes db table-name zone-id)
       wrap-json-response
       wrap-json-body))
+
+(defn -main
+  "Starts a Fondo node on port, using environ for
+   AWS settings."
+  [port]
+  (let [db         {:access-key (env :dynamo-access-key)
+                    :secret-key (env :dynamo-secret-key)
+                    :endpoint   (env :dynamo-endpoint)}
+        table-name (env :dynamo-table-name)
+        zone-id    (env :zone-id)]
+    (jetty/run-jetty (node-app db table-name zone-id) {:port (Integer. port)})))
