@@ -31,15 +31,15 @@
     (s3/create-bucket (:cred s3) (:bucket-name s3))))
 
 (defn ^:internal put-to-s3
-  "Post a String, InputStream, or File to S3 to the ID specified by
-  id. File will be made public"
-  [s3 id data]
-  (s3/put-object (:cred s3) (:bucket-name s3) id data)
+  "Post a String, InputStream, or File to S3 as specified by
+  object-name. File will be made public."
+  [s3 object-name data]
+  (s3/put-object (:cred s3) (:bucket-name s3) object-name data)
   (s3/update-object-acl (:cred s3)
                         (:bucket-name s3)
-                        id
+                        object-name
                         (s3/grant :all-users :read))
-  (str "https://s3.amazonaws.com/" (:bucket-name s3) "/" id))
+  (str "https://s3.amazonaws.com/" (:bucket-name s3) "/" object-name))
 
 (defn put-value
   "Put a value into node; hashes val to return the ID that will be used.
@@ -59,7 +59,7 @@
      (if-let [id (:vid resp)]
        id
        resp)))
-  ([node val s3 data name]
+  ([node val s3 data s3-object-name]
    (ensure-bucket-exists s3)
-   (let [uri (put-to-s3 s3 name data)]
+   (let [uri (put-to-s3 s3 s3-object-name data)]
      (put-value node (assoc val :uri uri)))))
