@@ -1,10 +1,10 @@
 # fondo-clj
 
-TODO: Brief description
-
-
+Fondo for Clojure.
 
 ## Releases and Dependency Information
+
+TODO
 
 * Releases are published to TODO_LINK
 
