@@ -8,7 +8,15 @@
 (defn initialize-table
   "Set up Dynamo table to store Fondo values"
   [db table-name]
-  (far/create-table db table-name [:vid :s] {}))
+  (far/create-table db
+                    table-name
+                    [:vid :s]
+                    {:gsindexes [{:name :timestamp
+                                  :range-keydef [:timestamp :n]
+                                  :hash-keydef [:vid :s]
+                                  :projection :all
+                                  :throughput {:read 1 :write 1}}]}
+                    :block true))
 
 (defn ensure-table
   "Checks to see if the given table has been initialized,
@@ -64,5 +72,7 @@
 
      :success
      (do
-       (far/put-item db table-name {:vid id :value (far/freeze val)})
+       (far/put-item db table-name {:vid id
+                                    :timestamp (.getTime (java.util.Date.))
+                                    :value (far/freeze val)})
        {:stored true :vid id}))))
