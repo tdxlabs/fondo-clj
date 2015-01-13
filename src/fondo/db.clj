@@ -24,7 +24,7 @@
   the validata library."
   [k v & [_]]
   (if (nil? k) true
-      (and (url-like v) (absolute? (url-like v)))))
+      (and (url-like v) (absolute? v))))
 
 (def ^:internal uri
   {:validator uri?
