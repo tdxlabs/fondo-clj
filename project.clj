@@ -31,7 +31,8 @@
   :profiles
   {:dev
    {:dependencies [[org.clojure/tools.namespace "0.2.7"]
-                   [ring-server "0.3.1"]]
+                   [ring-server "0.3.1"]
+                   [criterium "0.4.3"]]
     :source-paths ["dev"]}}
   :aliases {"init-db"
             ["run" "-m" "fondo.db/initialize-table"]})
