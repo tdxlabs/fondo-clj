@@ -49,13 +49,21 @@
       {:status 200
        :body result})))
 
+(defn get-since
+  [db table-name timestamp]
+  (let [t      (Integer/parseInt timestamp)
+        result (db/get-since db table-name t)]
+    {:status 200
+     :body   {:values result}}))
+
 (defn node-routes
   [db table-name zone-id]
   (routes
    (GET "/" [] get-root)
    (GET "/info" [] (get-info zone-id))
    (GET "/value/:id" [id] (get-value db table-name id))
-   (PUT "/value/:id" [id :as request] (put-value db table-name id request))))
+   (PUT "/value/:id" [id :as request] (put-value db table-name id request))
+   (GET "/values/since/:timestamp" [timestamp] (get-since db table-name timestamp))))
 
 (defn node-app
   [db table-name zone-id]

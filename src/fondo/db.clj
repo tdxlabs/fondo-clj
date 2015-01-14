@@ -76,3 +76,11 @@
                                     :timestamp (.getTime (java.util.Date.))
                                     :value (far/freeze val)})
        {:stored true :vid id}))))
+
+(defn get-since
+  "Get values stored since timestamp (as Integer), optionally
+   include batch size"
+  [db table-name timestamp & [batch-size]]
+  (sort-by :timestamp (far/scan db table-name
+                                {:attr-conds {:timestamp [:gt timestamp]}
+                                              :limit     batch-size})))

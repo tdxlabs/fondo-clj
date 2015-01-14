@@ -74,8 +74,27 @@
 (deftest ensure-unique-id
   (testing "does not overwrite preexisting IDs"
     (let [val {:name "Test"
-               :uri "http://example.com/"}
+               :uri echo-server}
           id (encode-and-hash (val-with-data val))]
       (put-value id val)
       (let [failed (put-value id val)]
         (is (= ["Value with that ID exists"] (get-in failed [:errors :vid])))))))
+
+(deftest timestamp-ranges
+  (testing "returns list of new IDs since timestamp"
+    (let [val1 {:name "Range Test 1"
+                :uri echo-server}
+          id1  (encode-and-hash (val-with-data val1))
+          res   (put-value id1 val1)
+          timestamp (:timestamp (far/get-item db table-name {:vid id1}))
+          val2 {:name "Range Test 2"
+                :uri  echo-server}
+          id2  (encode-and-hash (val-with-data val2))
+          val3 {:name "Range Test 3"
+                :uri echo-server}
+          id3  (encode-and-hash (val-with-data val3))]
+      (put-value id2 val2)
+      (put-value id3 val3)
+      (let [results (db/get-since db table-name timestamp)]
+        (is (= 2 (count results)))
+        (is (= (list id2 id3) (map :vid results)))))))
