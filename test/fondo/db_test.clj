@@ -3,6 +3,7 @@
       [clojure.test :refer :all]
       [fondo.db :as db]
       [fondo.encode :refer [encode-and-hash val-with-data]]
+      [fondo.util :refer [run-echo-app]]
       [taoensso.faraday :as far]
       [validata.core :as v]))
 
@@ -12,6 +13,8 @@
    :endpoint "http://localhost:8000"})
 
 (def table-name :test-values)
+(def port 9876)
+(def echo-server (str "http://localhost:" port))
 
 (defn table-setup
   "Create table, then destroy on completion"
@@ -30,16 +33,23 @@
   [id]
   (db/get-value db table-name id))
 
-(use-fixtures :once table-setup)
+(defn run-echo-server
+  [f]
+  (let [server-thread (Thread. #(run-echo-app port))]
+    (.start server-thread)
+    (f)
+    (.stop server-thread)))
+
+(use-fixtures :once table-setup run-echo-server)
 
 (deftest validate-value
   (testing "correctly validates values"
     (let [valid1 {:name "Name"
-                  :uri  "http://example.com/"}
+                  :uri  echo-server}
           valid2 {:name "Name"
-                  :uri  "http://example.com/"
+                  :uri  echo-server
                   :description "Description"}
-          invalid1 {:uri "http://example.com/"}
+          invalid1 {:uri echo-server}
           invalid2 {:name "Name"}
           invalid3 {:uri "URI"
                     :name "Name"}]
@@ -52,7 +62,7 @@
 (deftest put-and-get-values
   (testing "stores and retrieves values"
     (let [val {:name "Test"
-               :uri "http://example.com/"}
+               :uri echo-server}
           id (encode-and-hash (val-with-data val))]
       (put-value id val)
       (let [result (get-value id)
