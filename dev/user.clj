@@ -15,7 +15,8 @@
    [fondo.client :as client]
    [fondo.db :as db]
    [fondo.node :as node]
-   [ring.server.standalone :refer :all]))
+   [ring.server.standalone :refer :all]
+   [taoensso.faraday :as far]))
 
 (def system
   "A Var containing an object representing the application under
@@ -23,9 +24,9 @@
   {:db           {:access-key (env :dynamo-access-key)
                   :secret-key (env :dynamo-secret-key)
                   :endpoint   (env :dynamo-endpoint)}
-   :table-name   (env :dynamo-table-name)
+   :table-name   (keyword (env :dynamo-table-name))
    :zone-id      (env :zone-id)
-   :port         (env :node-port)
+   :port         (Integer. (env :node-port))
    :s3           {:cred {:access-key (env :s3-access-key)
                          :secret-key (env :s3-secret-key)}
                   :bucket-name (env :s3-bucket-name)}})
