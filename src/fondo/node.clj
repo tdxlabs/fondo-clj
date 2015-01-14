@@ -1,7 +1,9 @@
 (ns fondo.node
   (:require
    [cheshire.core :as json]
+   [clj-http.client :as client]
    [clojure.walk :refer [keywordize-keys]]
+   [clojurewerkz.urly.core :as url]
    [compojure.core :refer [routes GET PUT POST]]
    [compojure.route :as route]
    [environ.core :refer [env]]
@@ -81,3 +83,12 @@
         table-name (env :dynamo-table-name)
         zone-id    (env :zone-id)]
     (jetty/run-jetty (node-app db table-name zone-id) {:port (Integer. port)})))
+
+(defn include-zone
+  "Include values from another zone."
+  [db table-name & [{:keys [node-uri since batch-size]}]]
+  (let [url (url/url-like node-uri)
+        path (.mutatePath url (str "values/since/" since))
+        resp (:values (:body (client/get (str path) {:as :json})))]
+    (doseq [val resp]
+      (db/put-without-validation db table-name val))))

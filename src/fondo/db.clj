@@ -49,6 +49,13 @@
     {:id id :value val}
     {:error :not-found}))
 
+(defn put-without-validation
+  "Put val into the database without validating. Used
+   for bulk operations when "
+  [db table-name val]
+  (let [frozen (assoc val :value (far/freeze (:value val)))]
+    (far/put-item db table-name frozen)))
+
 (defn put-value
   "Put val in the database with ID id.
    Validates existence of :name and :uri in val, and :uri
