@@ -79,3 +79,29 @@ There is not a convenience function.
 (def dog-id
  (client/put-value (:node system) dog-val (:s3 system) dog-data "dogs.csv"))
 ```
+
+## How To Include a Zone
+
+Start one REPL as normal.
+
+Start another REPL with a different port and DynamoDB table name.
+
+```sh
+export NODE_PORT=3001
+export DYNAMO_TABLE_NAME=values-2
+lein repl
+```
+
+Then:
+
+```clj
+(go)
+(node/include-zone
+ (:db system)
+ (:table-name system)
+ {:node-uri "http://localhost:3000"
+  :since 0})
+```
+
+Now, adding values to the included zone will be included when you run the
+`include-zone` function.
