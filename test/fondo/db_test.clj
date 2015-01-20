@@ -34,6 +34,7 @@
   (db/get-value db table-name id))
 
 (defn run-echo-server
+  "This is a simple Jetty-based echo HTTP server."
   [f]
   (let [server-thread (Thread. #(run-echo-app port))]
     (.start server-thread)
