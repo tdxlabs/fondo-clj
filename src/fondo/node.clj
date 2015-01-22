@@ -52,9 +52,11 @@
        :body result})))
 
 (defn get-since
-  [db table-name timestamp]
-  (let [t      (Integer/parseInt timestamp)
-        result (db/get-since db table-name t)]
+  [db table-name timestamp request]
+  (let [t         (Integer/parseInt timestamp)
+        batch-str (get-in request [:params :batch-size])
+        batch     (if batch-str (Integer/parseInt batch-str))
+        result    (db/get-since db table-name t batch)]
     {:status 200
      :body   {:values result}}))
 
@@ -65,7 +67,8 @@
    (GET "/info" [] (get-info zone-id))
    (GET "/value/:id" [id] (get-value db table-name id))
    (PUT "/value/:id" [id :as request] (put-value db table-name id request))
-   (GET "/values/since/:timestamp" [timestamp] (get-since db table-name timestamp))))
+   (GET "/values/since/:timestamp" [timestamp :as request]
+        (get-since db table-name timestamp request))))
 
 (defn node-app
   [db table-name zone-id]
@@ -86,9 +89,13 @@
 
 (defn include-zone
   "Include values from another zone."
-  [db table-name & [{:keys [node-uri since batch-size]}]]
-  (let [url (url/url-like node-uri)
-        path (.mutatePath url (str "values/since/" since))
-        resp (:values (:body (client/get (str path) {:as :json})))]
-    (doseq [val resp]
+  [db table-name & [{:keys [node since batch-size]}]]
+  (let [url  (-> (url/url-like (:url node))
+               (.mutatePath (str "values/since/" since))
+               (.mutateQuery (str "batch-size=" batch-size)))
+        resp (client/get (str url) {:as :json
+                                    :basic-auth [(:username node)
+                                                 (:password node)]})
+        vals (get-in resp [:values :body])]
+    (doseq [val vals]
       (db/put-without-validation db table-name val))))
