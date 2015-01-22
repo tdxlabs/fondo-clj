@@ -63,26 +63,30 @@
    and added to val as :data, and id must match the bencoded
    and SHA3-384 hashed result."
   [db table-name id val]
-  (let [e (v/errors val value-validations)]
-    (cond
-     ;; Failed validation
-     (not (empty? e))
-     {:errors e}
+  (try
+    (let [e (v/errors val value-validations)]
+      (cond
+        ;; Failed validation
+        (not (empty? e))
+        {:errors e}
 
-     ;; ID exists
-     (not (= :not-found (:error (get-value db table-name id))))
-     {:errors {:vid ["Value with that ID exists"]}}
+        ;; ID exists
+        (not (= :not-found (:error (get-value db table-name id))))
+        {:errors {:vid ["Value with that ID exists"]}}
 
-     ;; Hash does not match ID
-     (not (= id (encode-and-hash (val-with-data val))))
-     {:errors {:vid ["Hash does not match ID"]}}
+        ;; Hash does not match ID
+        (not (= id (encode-and-hash (val-with-data val))))
+        {:errors {:vid ["Hash does not match ID"]}}
 
-     :success
-     (do
-       (far/put-item db table-name {:vid id
-                                    :timestamp (.getTime (java.util.Date.))
-                                    :value (far/freeze val)})
-       {:stored true :vid id}))))
+        :success
+        (do
+          (far/put-item db table-name {:vid id
+                                       :timestamp (.getTime (java.util.Date.))
+                                       :value (far/freeze val)})
+          {:stored true :vid id})))
+    (catch Exception e
+      {:errors {:vid [(str "Error storing value: "
+                           (.getMessage e))]}})))
 
 (defn get-since
   "Get values stored since timestamp (as Integer), optionally

@@ -99,3 +99,11 @@
       (let [results (db/get-since db table-name timestamp)]
         (is (= 2 (count results)))
         (is (= (list id2 id3) (map :vid results)))))))
+
+(deftest handles-exceptions
+  (testing "with a nonexistent table"
+    (let [val {:name "Exception Test"
+               :uri echo-server}
+          id  (encode-and-hash (val-with-data val))
+          res (db/put-value db :nonexistent-table id val)]
+      (is (get-in res [:errors :vid])))))

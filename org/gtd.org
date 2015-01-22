@@ -8,7 +8,7 @@
 :END:
 ** TODO How do we want to do authentication?
 Let's make a plan.
-** TODO What happens if `faraday/put-item` fails?
+** DONE What happens if `faraday/put-item` fails?
 Check `put-value` in [[~/dev/tdx/fondo-clj/src/fondo/db.clj]].
 * Repeating
 :PROPERTIES:
