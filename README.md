@@ -1,48 +1,22 @@
 # fondo-clj
 
-Fondo for Clojure.
+Fondo is a (nascent) specification for distributed, immutable, derived, addressable data. It defines a layer for addressing data, providing a foundation for downstream functions such as data caching, transport, discovery, and computation. (The word "fondo" is Esperanto for "foundation".)
+
+This repository contains both a Fondo server node and client library
+implemented in Clojure, but Fondo itself is language-agnostic.
+
+For design rationale and implementation specification, please see the Wiki.
 
 ## Releases and Dependency Information
 
-TODO
-
-* Releases are published to TODO_LINK
-
-* Latest stable release is TODO_LINK
-
-* All released versions TODO_LINK
-
-[Leiningen] dependency information:
-
-    [fondo-clj "0.1.0-SNAPSHOT"]
-
-[Maven] dependency information:
-
-    <dependency>
-      <groupId>fondo-clj</groupId>
-      <artifactId>fondo-clj</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
-    </dependency>
-
-[Leiningen]: http://leiningen.org/
-[Maven]: http://maven.apache.org/
-
-
-
-## Usage
-
-TODO
-
-
+An initial release of Fondo will soon be published to Clojars.
 
 ## Change Log
 
-* Version 0.1.0-SNAPSHOT
-
-
+* Initial public release: 27 October 2015
 
 ## Copyright and License
 
-Copyright © 2014 TODO_INSERT_NAME
+Copyright © 2015 Joshua Miller and David James
 
-TODO: [Choose a license](http://choosealicense.com/)
+Distributed under the Eclipse Public License, the same as Clojure.
